@@ -1,22 +1,26 @@
-<script setup>
+<template>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+
+<script lang="ts" setup>
 useHead({
   title: 'Vitesse Nuxt 3',
   link: [
     {
-      rel: 'icon', type: 'image/png', href: '/nuxt.png',
+      rel: 'icon',
+      type: 'image/png',
+      href: './nuxt.png',
     },
   ],
 })
 </script>
 
-<template>
-  <NuxtLayout cl>
-    <NuxtPage />
-  </NuxtLayout>
-</template>
-
-<style>
-html, body , #__nuxt{
+<style lang="scss">
+html,
+body,
+#__nuxt {
   height: 100vh;
   margin: 0;
   padding: 0;

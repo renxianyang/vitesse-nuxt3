@@ -4,3 +4,7 @@ dist
 .output
 .nuxt
 .env
+
+.vscode
+.idea
+dist
