@@ -2,16 +2,59 @@ import { defineNuxtConfig } from 'nuxt'
 import replaceIndexTemplate from './index.html'
 import path from 'path'
 
-const isSsr = process.argv.includes(`--ssr`)
+/* vite plugins */
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import Components from 'unplugin-vue-components/vite'
+import { ArcoResolver } from 'unplugin-vue-components/resolvers'
 
+const IS_SSR = process.argv.includes(`--ssr`)
 const WEB_DIR = path.resolve('./web/')
 
+/**
+ * https://github.com/arco-design/arco-design-vue/issues/24#issuecomment-1006931025
+ * */
 export default defineNuxtConfig({
   // 默认 true
-  ssr: isSsr,
+  ssr: IS_SSR,
+
+  router: {},
 
   alias: {
     '@': WEB_DIR,
+  },
+
+  build: {
+    transpile: ['compute-scroll-into-view'],
+  },
+
+  vite: {
+    css: {
+      preprocessorOptions: {
+        less: {
+          additionalData: `@import "@/styles/variables.less";`,
+          modifyVars: {},
+          javascriptEnabled: true,
+        },
+      },
+    },
+    plugins: [
+      createSvgIconsPlugin({
+        iconDirs: [path.resolve(process.cwd(), 'src/icons')],
+        symbolId: 'icon-[dir]-[name]',
+      }),
+      Components({
+        dts: true, // enabled by default if `typescript` is installed
+        resolvers: [
+          ArcoResolver({
+            importStyle: 'less',
+          }),
+        ],
+      }),
+    ],
+    optimizeDeps: {
+      include: ['vue', 'lodash', '@arco-design/web-vue', '@arco-design/web-vue/es/icon', 'pinia', 'vue-router'],
+      exclude: [],
+    },
   },
 
   // 需要 SSG 的页面，开启 ssr 之后有效
